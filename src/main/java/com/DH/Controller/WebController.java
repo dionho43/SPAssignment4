@@ -45,7 +45,7 @@ public class WebController extends WebMvcConfigurerAdapter {
 	
 	@Autowired
 	bookService bookService;
-
+	//Global user variable
 	public User loggedInUser;
 
     @Override
@@ -190,7 +190,6 @@ public class WebController extends WebMvcConfigurerAdapter {
     }
     
     //Searches
-    
     @GetMapping("/search")
     public String search(Search search) {
     	if (loggedInUser == null)
@@ -207,23 +206,6 @@ public class WebController extends WebMvcConfigurerAdapter {
     	}
     }
     
-    @GetMapping("/createBook")
-    public String createBook(Book book) {
-        return "createBook";
-    }
-    
-    @PostMapping("/bookCreated")
-    public void createBook(@Valid Book book, HttpServletRequest request, HttpServletResponse response)throws IOException {
-     	response.setContentType("text/html");
-     	PrintWriter out = response.getWriter();
-         	bookService.save(book);
-         	htmlHeader( out);
-         	container(out);
- 		    out.println("<p>Successfully created book:" + book.getTitle() + "</p>");
- 		    out.println("<form action=\"http://localhost:8080/home\">");
-		    out.println("<input type=\"submit\" class=\"btn btn-default\" value=\"Back\" /></form>");
- 		    htmlFooter(out);
-     }
     
     @PostMapping("/searchResults")
     public void search(@Valid Search search, HttpServletRequest request, HttpServletResponse response)throws IOException {
@@ -297,6 +279,71 @@ public class WebController extends WebMvcConfigurerAdapter {
  		    htmlFooter(out);
      }
     
+    //Book Methods
+    @GetMapping("/createBook")
+    public String createBook(Book book) {
+        return "createBook";
+    }
+    
+    @PostMapping("/bookCreated")
+    public void createBook(@Valid Book book, HttpServletRequest request, HttpServletResponse response)throws IOException {
+     	response.setContentType("text/html");
+     	PrintWriter out = response.getWriter();
+         	bookService.save(book);
+         	htmlHeader( out);
+         	container(out);
+ 		    out.println("<p>Successfully created book:" + book.getTitle() + "</p>");
+ 		    out.println("<form action=\"http://localhost:8080/home\">");
+		    out.println("<input type=\"submit\" class=\"btn btn-default\" value=\"Back\" /></form>");
+ 		    htmlFooter(out);
+     }
+    //Admin Method to view stock
+    @GetMapping("/viewBooks")
+    public void viewBooks( HttpServletRequest request, HttpServletResponse response)throws IOException {
+    	if (loggedInUser != null)
+    	{
+     	response.setContentType("text/html");
+     	PrintWriter out = response.getWriter();
+     	List<Book> stock = bookService.findAll();
+     	
+         	htmlHeader( out);
+         	toolBarStart(out);
+         	toolBarEnd(out);
+         	container(out);
+ 		    out.println("");
+ 		    out.println("<table style=\"border-collapse: separate; border-spacing: 50px;\" class=\"sortable\">");
+ 		    out.println("<thead>");
+ 		    out.println("<tr>");
+ 		    out.println("<th>Image</th>");
+ 		    out.println("<th>Title</th>");
+ 		    out.println("<th>Price</th>");
+ 		    out.println("<th>Category</th>");
+ 		    out.println("<th>Stock</th>");
+ 		    out.println("<th></th>");
+ 		    out.println("</tr>");
+ 		    out.println("</thead>");
+ 		    out.println("<tbody>");
+ 		    for (int i=0; i<stock.size(); i++)
+ 		    {
+ 		    	out.println("<tr>");
+ 		    	out.println("<td><img src=\"/" + stock.get(i).getImage().getName()+ "\" style=\"width:64px;height:64px;\"></td>");
+ 		    	out.println("<td>" + stock.get(i).getTitle() + "</td>");
+ 		    	out.println("<td>"+ stock.get(i).getPrice()+"</td>");
+ 		    	out.println("<td>"+ stock.get(i).getCategory()+"</td>");
+ 		    	out.println("<td>"+ stock.get(i).getStock()+"</td>");
+ 		    	out.println("<td><a href=\"book/edit/" + stock.get(i).getId() + "\">Edit Stock</a></td>");
+ 		    	out.println("</tr>");
+ 		    }
+ 		    out.println("</tbody>");
+ 		    out.println("</table>");
+ 		    htmlFooter(out);
+    	}
+    	else
+    	{
+    		response.sendRedirect("http://localhost:8080/login");
+    	}
+     }
+    
     //Purchases
     @GetMapping("/cart")
     public void cart( HttpServletRequest request, HttpServletResponse response)throws IOException {
@@ -363,8 +410,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     	loggedInUser.removeFromCart(book);
     	response.sendRedirect("http://localhost:8080/cart");
     }
-    
-  //Purchases
+
     @GetMapping("/checkout")
     public void checkout( HttpServletRequest request, HttpServletResponse response)throws IOException {
     	if (loggedInUser != null)
@@ -387,7 +433,6 @@ public class WebController extends WebMvcConfigurerAdapter {
     	}
      }
     
-  //Purchases
     @GetMapping("/myPurchases")
     public void myPurchases( HttpServletRequest request, HttpServletResponse response)throws IOException {
     	if (loggedInUser != null)
@@ -445,7 +490,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     		response.sendRedirect("http://localhost:8080/login");
     	}
      }
-    
+    //Ratings
     @GetMapping("/rating")
     public String rating(HttpServletRequest request, HttpServletResponse response, Rating rating)throws IOException {
     	if (loggedInUser == null)
@@ -549,53 +594,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     		response.sendRedirect("http://localhost:8080/login");
     	}
      }
-    
-    @GetMapping("/viewBooks")
-    public void viewBooks( HttpServletRequest request, HttpServletResponse response)throws IOException {
-    	if (loggedInUser != null)
-    	{
-     	response.setContentType("text/html");
-     	PrintWriter out = response.getWriter();
-     	List<Book> stock = bookService.findAll();
-     	
-         	htmlHeader( out);
-         	toolBarStart(out);
-         	toolBarEnd(out);
-         	container(out);
- 		    out.println("");
- 		    out.println("<table style=\"border-collapse: separate; border-spacing: 50px;\" class=\"sortable\">");
- 		    out.println("<thead>");
- 		    out.println("<tr>");
- 		    out.println("<th>Image</th>");
- 		    out.println("<th>Title</th>");
- 		    out.println("<th>Price</th>");
- 		    out.println("<th>Category</th>");
- 		    out.println("<th>Stock</th>");
- 		    out.println("<th></th>");
- 		    out.println("</tr>");
- 		    out.println("</thead>");
- 		    out.println("<tbody>");
- 		    for (int i=0; i<stock.size(); i++)
- 		    {
- 		    	out.println("<tr>");
- 		    	out.println("<td><img src=\"/" + stock.get(i).getImage().getName()+ "\" style=\"width:64px;height:64px;\"></td>");
- 		    	out.println("<td>" + stock.get(i).getTitle() + "</td>");
- 		    	out.println("<td>"+ stock.get(i).getPrice()+"</td>");
- 		    	out.println("<td>"+ stock.get(i).getCategory()+"</td>");
- 		    	out.println("<td>"+ stock.get(i).getStock()+"</td>");
- 		    	out.println("<td><a href=\"book/edit/" + stock.get(i).getId() + "\">Edit Stock</a></td>");
- 		    	out.println("</tr>");
- 		    }
- 		    out.println("</tbody>");
- 		    out.println("</table>");
- 		    htmlFooter(out);
-    	}
-    	else
-    	{
-    		response.sendRedirect("http://localhost:8080/login");
-    	}
-     }
-    
+    //Admin Method to edit stock items
     @GetMapping("/editStock")
     public String editStock(HttpServletRequest request, HttpServletResponse response, Rating rating)throws IOException {
     	if (loggedInUser == null)

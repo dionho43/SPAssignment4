@@ -12,16 +12,17 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.DH.Entity.Book;
 
-
+//Named Queries
 @NamedQueries( {
 	@NamedQuery(name = "User.findAll", query = "select o from User o"),
 	@NamedQuery(name = "User.findById", query = "select o from User o where o.id=:id"),
 	@NamedQuery(name = "User.findByUsername", query = "select o from User o where o.username=:username"),
 })
-
+//Defining JPA Hibernate Entity
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable{
+	//To autogenerate my ID values for objects
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
@@ -31,18 +32,20 @@ public class User implements Serializable{
 	private String password;
 	private String address;
 	private boolean admin;
+	//Establishing a many to many relationship
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<Book> purchases = new ArrayList<Book>();
+	//Establishing a one to many relationship
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<Book> cart = new ArrayList<Book>();
-	
+	//Blank Constructor
 	public User(){
 		
 	}
 	
-	
+	//Constructor for creating objects
 	public User(String firstName, String lastName, String address, String username, String password, boolean admin) {
 		super();
 		this.firstName = firstName;
@@ -52,7 +55,7 @@ public class User implements Serializable{
 		this.password = password;
 		this.admin = admin;
 	}
-
+	//Mutator methods
 	public int getId() {
 		return id;
 	}

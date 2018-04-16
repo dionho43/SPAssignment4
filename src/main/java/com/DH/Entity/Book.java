@@ -21,17 +21,18 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+//Named Queries
 @NamedQueries( {
 	@NamedQuery(name = "Book.findByTitle", query = "select o from Book o where o.title=:title"),
 	@NamedQuery(name = "Book.findById", query = "select o from Book o where o.id=:id"),
 	@NamedQuery(name = "Book.findAll", query = "select o from Book o"),
 	@NamedQuery(name = "Book.search", query = "select o from Book o where o.title LIKE :search OR o.author LIKE :search")
 })
-
+//Defining JPA Hibernate Entity
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Book implements Serializable{
+	//To autogenerate my ID values for objects
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
@@ -41,14 +42,15 @@ public class Book implements Serializable{
 	private String category;
 	private File image;
 	private int stock;
+	//Establishing a one to many relationship
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<Rating> ratings = new ArrayList<Rating>();
-	
+	//Blank Constructor
 	public Book() {
 		
 	}
-	
+	//Constructor for creating objects
 	public Book(String title, String author, String price, String category, File image, int stock)
 	{
 		this.title = title;
@@ -58,7 +60,7 @@ public class Book implements Serializable{
 		this.image = image;
 		this.stock=stock;
 	}
-	
+	//Constructor for editing object
 	public Book(int id, String title, String author, String price, String category, File image, int stock)
 	{
 		this.id = id;
@@ -71,7 +73,7 @@ public class Book implements Serializable{
 	}
 	
 	
-	
+	//Mutator methods
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -133,19 +135,9 @@ public class Book implements Serializable{
 		this.ratings.add(r);		
 	}
 	
-	/*public void removeFromRatings(Rating r)
-	{
-		List<Rating> toRemove = new ArrayList<>();
-		for (Rating a : this.ratings) {
-		    if (a.getId()==r.getId()) {
-		        toRemove.add(a);
-		    }
-		}
-		this.ratings.removeAll(toRemove);
-	}*/
-	
 	public void removeFromRatings(Rating r)
 	{
+		//Iterator pattern use to avoid concurrent modification exception
 		for (Iterator<Rating> iterator = this.ratings.iterator(); iterator.hasNext();) {
 		    Rating rating = iterator.next();
 		    if (rating.getId()==r.getId()) {

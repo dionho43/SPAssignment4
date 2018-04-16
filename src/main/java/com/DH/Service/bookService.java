@@ -9,16 +9,18 @@ import com.DH.Entity.Book;
 import com.DH.Repository.bookRepository;
 
 
-
+//Establish service with Spring
 @Service
 public class bookService {
 
 @Autowired
 protected bookRepository bookRepository;
-
+//Inherited Save method
 public void save(Book book) {
     bookRepository.save(book);
 } 
+
+//Methods executing named queries
 public List<Book> findByTitle(String title)
 {
 	return bookRepository.findByTitle(title);

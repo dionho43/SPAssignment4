@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.DH.Entity.Book;
-
+//Interface class
 @Repository
 public interface bookRepository extends JpaRepository<Book, Long> {
 

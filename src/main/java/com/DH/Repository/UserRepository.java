@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.DH.Entity.Book;
 import com.DH.Entity.User;
-
+//Interface class
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

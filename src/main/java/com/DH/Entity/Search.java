@@ -4,18 +4,18 @@ public class Search {
 	
 	private String input;
 	private String category;
-	
+	//Blank Constructor
 	public Search()
 	{
 		
 	}
-	
+	//Constructor for creating objects
 	public Search (String input, String category)
 	{
 		this.input=input;
 		this.category=category;
 	}
-
+	//Mutator methods
 	public String getInput() {
 		return input;
 	}
