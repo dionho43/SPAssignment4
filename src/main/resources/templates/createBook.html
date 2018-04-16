@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+             <nav class="navbar navbar-inverse">
+    	 	<div class="container-fluid">
+    	 	<ul class="nav navbar-nav">
+    	 	<li><a href="http://localhost:8080/logout">Sign Out</a></li>
+    	 	<li><a href="http://localhost:8080">Home</a></li>
+		    <li><a href="http://localhost:8080/search">Search</a></li>
+		    <li><a href="http://localhost:8080/myPurchases">My Purchases</a></li>
+    	 	<li><a href="http://localhost:8080/cart">My Cart</a></li>
+		    <li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin Tasks <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+			<li><a href="http://localhost:8080/createBook">Create Book</a></li>
+			<li><a href="http://localhost:8080/viewBooks">View Books</a></li>
+			<li><a href="http://localhost:8080/viewCustomers">View Customers</a></li>
+			</ul>
+			</li>
+		    </ul>
+    	 	</div>
+    	 	</nav>
+    <div class="container">
+    <div class="jumbotron">
+
+	<center><h2>Create a Book</h2></center>
+ 
+		<form action="#" th:action="@{/bookCreated}" th:object="${book}" method="post">
+		<table class="table">
+			<tr>
+            	<td><input type="text" class="form-control" th:field="*{title}" placeholder="Title"/></td>
+                <td th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name Error</td></tr>
+                
+                <tr>
+            	<td><input type="text" class="form-control" th:field="*{author}" placeholder="Author"/></td>
+                <td th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name Error</td></tr>
+                
+                <tr>
+            	<td><input type="text" class="form-control" th:field="*{price}" placeholder="Price"/></td>
+                <td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Name Error</td></tr>
+                
+                <tr>
+            	<td><input type="text" class="form-control" th:field="*{category}" placeholder="Category"/></td>
+                <td th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Name Error</td></tr>
+	    
+			<tr>
+            	<td><input type="file" class="form-control" th:field="*{image}" placeholder="Username"/></td>
+                <td th:if="${#fields.hasErrors('image')}" th:errors="*{image}">Name Error</td></tr>
+                
+                <tr>
+            	<td><input type="text" class="form-control" th:field="*{stock}" placeholder="Stock Available"/></td>
+                <td th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}">Name Error</td></tr>
+
+			<tr><td colspan="3">
+				<center><button type="submit" class="btn btn-default">Create</button></center></td>
+			</tr>
+		</table>
+	</form>
+	
+	<br/>
+	<br/>
+        </div>
+        </div>
+    </body>
+</html>
